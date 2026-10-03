@@ -1,1 +1,890 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📊 IGCSE Mathematics - امتحان شامل | Mr. Mohammed Hesham</title>
+<meta name="description" content="امتحان IGCSE Mathematics تفاعلي شامل - 24 سؤال">
+<meta name="author" content="Mr. Mohammed Hesham">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Inter:wght@400;600;700&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+<style>
+body { font-family: 'Cairo', sans-serif; }
+body.en-mode { font-family: 'Inter', sans-serif; }
+.arabic-math { font-family: 'Amiri', 'Cairo', serif; }
+.correct { background-color: #dcfce7 !important; border-color: #16a34a !important; }
+.incorrect { background-color: #fee2e2 !important; border-color: #dc2626 !important; }
+.timer-warning { color: #dc2626 !important; animation: pulse 1s infinite; }
+@keyframes pulse { 50% { opacity: 0.7; } }
+@media print { .no-print { display: none !important; } }
+.success-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-weight: bold; font-size: 0.875rem; }
+.grade-excellent { background: #dcfce7; color: #166534; }
+.grade-good { background: #fef3c7; color: #92400e; }
+.grade-pass { background: #dbeafe; color: #1e40af; }
+.grade-fail { background: #fee2e2; color: #991b1b; }
+.lang-switch {
+position: fixed; top: 16px; left: 16px; z-index: 100;
+background: white; padding: 6px; border-radius: 30px;
+box-shadow: 0 4px 15px rgba(0,0,0,0.15); display: flex; gap: 4px;
+border: 2px solid #1e3a8a;
+}
+[dir="ltr"] .lang-switch { left: auto; right: 16px; }
+.lang-btn {
+padding: 6px 14px; border-radius: 20px; cursor: pointer; font-weight: bold;
+transition: all 0.3s; border: none; font-size: 0.875rem;
+background: transparent; color: #6b7280;
+}
+.lang-btn.active { background: #1e3a8a; color: white; box-shadow: 0 2px 6px rgba(30,58,138,0.4); }
+.lang-btn:hover:not(.active) { background: #eff6ff; color: #1e3a8a; }
+.shuffle-badge {
+display: inline-block;
+background: linear-gradient(135deg, #1e3a8a, #dc2626);
+color: white; padding: 4px 12px; border-radius: 20px;
+font-size: 0.75rem; font-weight: bold; margin-right: 8px;
+}
+.math-display {
+display: inline-block; direction: ltr;
+font-family: 'Amiri', 'Times New Roman', serif;
+font-size: 1.2em; font-style: italic;
+padding: 2px 8px; background: #eff6ff;
+border-radius: 6px; margin: 2px;
+color: #1e3a8a; font-weight: 600; letter-spacing: 0.5px;
+}
+.save-indicator {
+position: fixed; bottom: 20px; left: 20px; z-index: 200;
+background: #10b981; color: white; padding: 8px 16px;
+border-radius: 20px; font-size: 0.8rem; font-weight: bold;
+opacity: 0; transition: opacity 0.3s; pointer-events: none;
+box-shadow: 0 4px 12px rgba(16,185,129,0.4);
+}
+.save-indicator.show { opacity: 1; }
+.formula-box {
+background: #eff6ff; border: 2px solid #3b82f6;
+border-radius: 8px; padding: 12px; margin: 10px 0;
+font-family: 'Amiri', serif;
+direction: ltr; text-align: center;
+}
+.svg-graph {
+display: block;
+margin: 12px auto;
+background: white;
+border: 2px solid #e5e7eb;
+border-radius: 12px;
+padding: 8px;
+box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+.graph-container { text-align: center; margin: 10px 0; }
+.module-badge {
+display: inline-block;
+padding: 4px 16px;
+border-radius: 20px;
+font-weight: bold;
+font-size: 0.85rem;
+margin-bottom: 8px;
+}
+.module-1 { background: #dbeafe; color: #1e40af; }
+.module-2 { background: #fef3c7; color: #92400e; }
+.module-3 { background: #fce7f3; color: #9f1239; }
+.module-4 { background: #ecfdf5; color: #065f46; }
+</style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-50 text-gray-800 p-4 md:p-8 min-h-screen">
 
+<div class="lang-switch no-print">
+<button class="lang-btn active" onclick="setLanguage('ar')" id="btn-ar">عربي</button>
+<button class="lang-btn" onclick="setLanguage('en')" id="btn-en">EN</button>
+</div>
+
+<div id="saveIndicator" class="save-indicator"> <span data-ar="تم الحفظ" data-en="Saved">تم الحفظ</span></div>
+
+<div id="timer-container" class="max-w-5xl mx-auto mb-4 text-center no-print">
+<div class="bg-white p-4 rounded-2xl shadow-md inline-block border-2 border-blue-100">
+<span class="text-gray-600 ml-2" data-ar="⏰ الوقت المتبقي:" data-en="⏰ Time Remaining:">⏰ الوقت المتبقي:</span>
+<span id="timer" class="text-2xl font-bold text-blue-700 font-mono">90:00</span>
+<span class="shuffle-badge" data-ar="🎲 IGCSE Math - 24 Question" data-en="🎲 IGCSE Math - 24 Questions"> IGCSE Math - 24 Question</span>
+</div>
+</div>
+
+<div class="max-w-5xl mx-auto mb-6 flex flex-wrap gap-3 justify-center no-print">
+<button onclick="toggleAnswers()" class="bg-blue-700 hover:bg-blue-800 text-white px-5 py-2 rounded-xl font-medium transition shadow cursor-pointer" data-ar="👀 إظهار / إخفاء الإجابات" data-en="👀 Show / Hide Answers">👀 إظهار / إخفاء الإجابات</button>
+<button onclick="window.print()" class="bg-gray-700 hover:bg-gray-900 text-white px-5 py-2 rounded-xl font-medium transition shadow cursor-pointer" data-ar="️ طباعة" data-en="🖨️ Print">🖨️ طباعة</button>
+<button onclick="reshuffleExam()" class="bg-gradient-to-r from-blue-700 to-red-600 text-white px-5 py-2 rounded-xl font-medium transition shadow cursor-pointer" data-ar=" أسئلة جديدة" data-en="🔄 New Questions">🔄 أسئلة جديدة</button>
+<button onclick="clearProgress()" class="bg-red-500 hover:bg-red-600 text-white px-5 py-2 rounded-xl font-medium transition shadow cursor-pointer" data-ar="🗑️ مسح التقدم" data-en="🗑️ Clear Progress">🗑️ مسح التقدم</button>
+</div>
+
+<header class="max-w-5xl mx-auto bg-white p-6 rounded-2xl shadow-lg mb-8 border-4 border-blue-700">
+<div class="text-center">
+<div class="inline-block bg-red-600 text-white px-4 py-1 rounded-full text-xs font-bold mb-2">IGCSE MATHEMATICS</div>
+<h1 class="text-2xl md:text-3xl font-bold text-gray-900 mb-2" data-ar="📊 IGCSE Mathematics - امتحان شامل" data-en=" IGCSE Mathematics - Comprehensive Exam"> IGCSE Mathematics - امتحان شامل</h1>
+<h2 class="text-lg text-blue-700 font-semibold" data-ar="24 سؤال في 4 أقسام - الجبر، الهندسة، الاحتمالات، التفاضل" data-en="24 Questions in 4 Sections - Algebra, Geometry, Probability, Calculus">24 سؤال في 4 أقسام - الجبر، الهندسة، الاحتمالات، التفاضل</h2>
+<p class="text-sm text-gray-600 mt-2" data-ar="الكسور، الصيغة القياسية، الإهلاك، نظرية فيثاغورس، الدوائر، المتتابعات، التحويلات" data-en="Fractions, Standard Form, Depreciation, Pythagoras, Circles, Sequences, Transformations">الكسور، الصيغة القياسية، الإهلاك، نظرية فيثاغورس، الدوائر، المتتابعات، التحويلات</p>
+<p class="text-xs text-green-600 mt-2 font-semibold" data-ar="💾 يتم حفظ تقدمك تلقائياً" data-en=" Progress saved automatically">💾 يتم حفظ تقدمك تلقائياً</p>
+</div>
+<div class="mt-4 flex flex-wrap justify-center gap-4 text-sm text-gray-600">
+<span><span data-ar="📅 التاريخ:" data-en="📅 Date:">📅 التاريخ:</span> <input type="text" id="examDate" class="border-b-2 border-blue-300 bg-transparent w-28 text-center"></span>
+<span><span data-ar="😊 الاسم:" data-en="😊 Name:">😊 الاسم:</span> <input type="text" id="studentName" class="border-b-2 border-blue-300 bg-transparent w-32 text-center" placeholder="اكتب اسمك"></span>
+<span><span data-ar="🏫 الشعبة:" data-en="🏫 Class:">🏫 الشعبة:</span> <input type="text" id="studentClass" class="border-b-2 border-blue-300 bg-transparent w-28 text-center" placeholder="الشعبة"></span>
+<span data-ar="⏰ المدة: 90 دقيقة" data-en="⏰ Duration: 90 min">⏰ المدة: 90 دقيقة</span>
+<span data-ar=" المجموع: 24 سؤال" data-en="📊 Total: 24 Questions"> المجموع: 24 سؤال</span>
+</div>
+</header>
+
+<div class="max-w-5xl mx-auto mb-6 bg-white p-4 rounded-xl shadow-md border-2 border-blue-200 no-print">
+<h3 class="font-bold text-lg mb-3 text-blue-800 text-center" data-ar="📐 الصيغ الأساسية" data-en="📐 Key Formulae">📐 الصيغ الأساسية</h3>
+<div class="grid md:grid-cols-3 gap-3 text-sm">
+<div class="formula-box"><strong>Quadratic:</strong> ax² + bx + c = 0</div>
+<div class="formula-box"><strong>Pythagoras:</strong> a² + b² = c²</div>
+<div class="formula-box"><strong>Cosine Rule:</strong> a² = b² + c² - 2bc·cos(A)</div>
+<div class="formula-box"><strong>Circle Area:</strong> πr²</div>
+<div class="formula-box"><strong>Density:</strong> ρ = m/V</div>
+<div class="formula-box"><strong>Depreciation:</strong> V = P(1-r)ⁿ</div>
+</div>
+</div>
+
+<main class="max-w-5xl mx-auto space-y-8" id="exam-content"></main>
+
+<div class="text-center no-print pb-8 mt-8">
+<button onclick="gradeExam()" class="bg-gradient-to-r from-blue-700 to-red-600 hover:from-blue-800 hover:to-red-700 text-white text-lg px-10 py-4 rounded-2xl font-bold shadow-xl transition transform hover:scale-105 cursor-pointer" data-ar="🎯 صحح إجاباتي!" data-en="🎯 Grade My Answers!">🎯 صحح إجاباتي!</button>
+</div>
+
+<div id="results-panel" class="max-w-5xl mx-auto mt-8 bg-white p-8 rounded-2xl shadow-2xl border-4 border-blue-700 hidden no-print">
+<h2 class="text-3xl font-bold text-gray-900 mb-6 text-center" data-ar=" نتيجتك يا بطل! 🏆" data-en="🏆 Your Results, Champion! ">🏆 نتيجتك يا بطل! 🏆</h2>
+<div class="grid md:grid-cols-3 gap-4 mb-6">
+<div class="bg-blue-50 p-4 rounded-xl text-center"><p data-ar="😊 الاسم" data-en="😊 Name">😊 الاسم</p><p id="res-name" class="font-bold text-xl text-blue-700">-</p></div>
+<div class="bg-red-50 p-4 rounded-xl text-center"><p data-ar=" التاريخ" data-en="📅 Date">📅 التاريخ</p><p id="res-date" class="font-bold text-xl text-red-700">-</p></div>
+<div class="bg-blue-50 p-4 rounded-xl text-center"><p data-ar="🌟 المجموع" data-en="🌟 Score">🌟 المجموع</p><p id="res-total" class="font-bold text-3xl text-blue-700">0 / 100</p></div>
+</div>
+<div class="text-center mb-6">
+<span id="success-badge" class="success-badge grade-excellent">-</span>
+<p id="success-percent" class="text-4xl font-bold text-blue-700 mt-2">0%</p>
+<p class="text-sm text-gray-500" data-ar="نسبة النجاح" data-en="Success Rate">نسبة النجاح</p>
+</div>
+<div class="bg-gray-50 p-6 rounded-xl mb-6">
+<h3 class="font-bold text-lg mb-4 text-gray-800" data-ar="📊 أدائك في كل قسم:" data-en="📊 Your Performance:">📊 أدائك في كل قسم:</h3>
+<div class="space-y-3" id="sections-performance"></div>
+</div>
+<div class="text-center mb-6">
+<button id="sendEmailBtn" onclick="sendResultsToEmail()" class="bg-gradient-to-r from-blue-700 to-red-600 text-white text-lg px-8 py-3 rounded-2xl font-bold shadow-xl transition cursor-pointer" data-ar="📧 أرسل النتيجة للمعلم" data-en="📧 Send Results to Teacher">📧 أرسل النتيجة للمعلم</button>
+<p id="emailStatus" class="text-sm mt-2 text-center font-medium"></p>
+</div>
+<div class="flex gap-3 justify-center">
+<button onclick="window.print()" class="bg-gray-700 text-white px-6 py-3 rounded-xl font-semibold" data-ar="🖨️ طباعة النتيجة" data-en="🖨️ Print Results">️ طباعة النتيجة</button>
+</div>
+</div>
+
+<footer class="max-w-5xl mx-auto mt-10 mb-8 text-center text-gray-500 text-sm no-print">
+© <span data-ar="IGCSE Mathematics Exam" data-en="IGCSE Mathematics Exam">IGCSE Mathematics Exam</span> | Mr. Mohammed Hesham 📊
+</footer>
+
+<script>
+const PUBLIC_KEY = "Rb3Lq8tXaFmc5YHUH";
+const SERVICE_ID = "service_w15m64i";
+const TEMPLATE_ID = "template_5b0u2tq";
+const TARGET_EMAIL = "mohammedhesham872@gmail.com";
+emailjs.init(PUBLIC_KEY);
+
+const STORAGE_KEY = 'igcse_math_comprehensive_exam_v1';
+const TOTAL_TIME = 5400;
+const TOTAL_QUESTIONS = 24;
+
+let currentSeed = null;
+let answersVisible = false;
+let saveIndicatorTimeout = null;
+
+function mulberry32(a) {
+    return function() {
+        var t = a += 0x6D2B79F5;
+        t = Math.imul(t ^ t >>> 15, t | 1);
+        t ^= t + Math.imul(t ^ t >>> 7, t | 61);
+        return ((t ^ t >>> 14) >>> 0) / 4294967296;
+    }
+}
+let rng = null;
+
+function showSaveIndicator() {
+    const indicator = document.getElementById('saveIndicator');
+    indicator.classList.add('show');
+    if (saveIndicatorTimeout) clearTimeout(saveIndicatorTimeout);
+    saveIndicatorTimeout = setTimeout(() => indicator.classList.remove('show'), 1500);
+}
+
+function saveState(showIndicator = true) {
+    try {
+        const state = {
+            seed: currentSeed, lang: currentLang,
+            studentName: document.getElementById('studentName').value,
+            studentClass: document.getElementById('studentClass').value,
+            examDate: document.getElementById('examDate').value,
+            answers: getSelectedAnswers(),
+            timeRemaining: timeRemaining,
+            answersVisible: answersVisible, savedAt: Date.now()
+        };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        if (showIndicator) showSaveIndicator();
+    } catch (e) { console.error('Save error:', e); }
+}
+
+function loadState() {
+    try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        return saved ? JSON.parse(saved) : null;
+    } catch (e) { return null; }
+}
+
+function getSelectedAnswers() {
+    const answers = {};
+    for (let i = 0; i < TOTAL_QUESTIONS; i++) {
+        const selected = document.querySelector(`input[name="q${i}"]:checked`);
+        if (selected) answers[i] = selected.value;
+    }
+    return answers;
+}
+
+function restoreAnswers(answers) {
+    if (!answers) return;
+    for (const [idx, val] of Object.entries(answers)) {
+        const radio = document.querySelector(`input[name="q${idx}"][value="${val}"]`);
+        if (radio) radio.checked = true;
+    }
+}
+
+function clearProgress() {
+    const msg = currentLang === 'ar' ? '️ هل أنت متأكد من مسح كل التقدم؟' : '⚠️ Clear all progress?';
+    if (confirm(msg)) { localStorage.removeItem(STORAGE_KEY); location.reload(); }
+}
+
+function setupAnswerListeners() {
+    document.getElementById('exam-content').addEventListener('change', (e) => {
+        if (e.target.type === 'radio') saveState();
+    });
+}
+
+function setupInputListeners() {
+    ['studentName', 'studentClass', 'examDate'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.addEventListener('input', () => saveState(false));
+            el.addEventListener('blur', () => saveState());
+        }
+    });
+}
+
+// ==================== SVG Diagrams ====================
+const svgGraphs = {
+    distance_time: `<svg class="svg-graph" width="400" height="280" viewBox="0 0 400 280" xmlns="http://www.w3.org/2000/svg">
+        <rect x="5" y="5" width="390" height="270" rx="12" fill="#eff6ff" stroke="#1e40af" stroke-width="2"/>
+        <text x="200" y="25" text-anchor="middle" font-size="14" fill="#1e40af" font-weight="bold">📈 Distance-Time Graph</text>
+        <line x1="50" y1="240" x2="370" y2="240" stroke="#374151" stroke-width="2"/>
+        <line x1="50" y1="240" x2="50" y2="40" stroke="#374151" stroke-width="2"/>
+        <text x="375" y="235" font-size="11" fill="#374151">Time</text>
+        <text x="20" y="140" text-anchor="middle" font-size="11" fill="#374151" transform="rotate(-90 20 140)">Distance (km)</text>
+        <text x="50" y="255" font-size="10" fill="#374151">13:00</text>
+        <text x="130" y="255" font-size="10" fill="#374151">14:00</text>
+        <text x="210" y="255" font-size="10" fill="#374151">14:45</text>
+        <text x="290" y="255" font-size="10" fill="#374151">16:19</text>
+        <text x="35" y="200" font-size="10" fill="#374151">10</text>
+        <text x="35" y="140" font-size="10" fill="#374151">20</text>
+        <text x="35" y="80" font-size="10" fill="#374151">25</text>
+        <line x1="50" y1="240" x2="130" y2="80" stroke="#2563eb" stroke-width="3"/>
+        <line x1="130" y1="80" x2="210" y2="80" stroke="#dc2626" stroke-width="3" stroke-dasharray="4"/>
+        <line x1="210" y1="80" x2="290" y2="240" stroke="#10b981" stroke-width="3"/>
+        <text x="90" y="150" font-size="10" fill="#2563eb" font-weight="bold">ذهاب</text>
+        <text x="170" y="70" font-size="10" fill="#dc2626" font-weight="bold">توقف 45 د</text>
+        <text x="250" y="170" font-size="10" fill="#10b981" font-weight="bold">عودة</text>
+    </svg>`,
+    
+    parabola: `<svg class="svg-graph" width="400" height="280" viewBox="0 0 400 280" xmlns="http://www.w3.org/2000/svg">
+        <rect x="5" y="5" width="390" height="270" rx="12" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+        <text x="200" y="25" text-anchor="middle" font-size="14" fill="#92400e" font-weight="bold">y = x² - 3x - 1</text>
+        <line x1="50" y1="140" x2="370" y2="140" stroke="#374151" stroke-width="2"/>
+        <line x1="200" y1="40" x2="200" y2="260" stroke="#374151" stroke-width="2"/>
+        <text x="375" y="135" font-size="11" fill="#374151">x</text>
+        <text x="205" y="35" font-size="11" fill="#374151">y</text>
+        <path d="M 80 100 Q 140 220 200 200 Q 260 180 320 100" fill="none" stroke="#f59e0b" stroke-width="3"/>
+        <circle cx="80" cy="100" r="4" fill="#dc2626"/>
+        <circle cx="140" cy="160" r="4" fill="#dc2626"/>
+        <circle cx="200" cy="200" r="4" fill="#dc2626"/>
+        <circle cx="260" cy="180" r="4" fill="#dc2626"/>
+        <circle cx="320" cy="100" r="4" fill="#dc2626"/>
+        <text x="200" y="265" text-anchor="middle" font-size="11" fill="#92400e">Parabola - Minimum at (1.5, -3.25)</text>
+    </svg>`,
+    
+    triangle_circle: `<svg class="svg-graph" width="400" height="280" viewBox="0 0 400 280" xmlns="http://www.w3.org/2000/svg">
+        <rect x="5" y="5" width="390" height="270" rx="12" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+        <text x="200" y="25" text-anchor="middle" font-size="14" fill="#1e40af" font-weight="bold">📐 Triangle + Semicircle</text>
+        <polygon points="100,220 220,220 100,140" fill="#bfdbfe" stroke="#2563eb" stroke-width="3"/>
+        <path d="M 100 140 A 85 85 0 0 1 220 220" fill="#fef3c7" stroke="#f59e0b" stroke-width="3"/>
+        <text x="160" y="235" text-anchor="middle" font-size="12" fill="#1e40af" font-weight="bold">6 cm</text>
+        <text x="80" y="180" font-size="12" fill="#1e40af" font-weight="bold">6</text>
+        <text x="200" y="265" text-anchor="middle" font-size="11" fill="#1e40af">المساحة = مثلث + نصف دائرة</text>
+    </svg>`,
+    
+    cylinder_hemisphere: `<svg class="svg-graph" width="400" height="280" viewBox="0 0 400 280" xmlns="http://www.w3.org/2000/svg">
+        <rect x="5" y="5" width="390" height="270" rx="12" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
+        <text x="200" y="25" text-anchor="middle" font-size="14" fill="#065f46" font-weight="bold">📦 Cylinder + Hemisphere</text>
+        <ellipse cx="200" cy="180" rx="60" ry="15" fill="#d1fae5" stroke="#10b981" stroke-width="2"/>
+        <rect x="140" y="120" width="120" height="60" fill="#d1fae5" stroke="#10b981" stroke-width="2"/>
+        <ellipse cx="200" cy="120" rx="60" ry="15" fill="#d1fae5" stroke="#10b981" stroke-width="2"/>
+        <path d="M 140 120 A 60 60 0 0 1 260 120" fill="#a7f3d0" stroke="#10b981" stroke-width="2"/>
+        <text x="200" y="155" text-anchor="middle" font-size="11" fill="#065f46">r, h=3r</text>
+        <text x="200" y="265" text-anchor="middle" font-size="11" fill="#065f46">V = (11/3)πr³</text>
+    </svg>`,
+    
+    kite_geometry: `<svg class="svg-graph" width="400" height="280" viewBox="0 0 400 280" xmlns="http://www.w3.org/2000/svg">
+        <rect x="5" y="5" width="390" height="270" rx="12" fill="#fce7f3" stroke="#ec4899" stroke-width="2"/>
+        <text x="200" y="25" text-anchor="middle" font-size="14" fill="#9f1239" font-weight="bold"> Kite ABCD</text>
+        <polygon points="100,100 200,80 300,140 200,200" fill="#fbcfe8" stroke="#ec4899" stroke-width="3"/>
+        <line x1="100" y1="100" x2="300" y2="140" stroke="#dc2626" stroke-width="2" stroke-dasharray="4"/>
+        <line x1="200" y1="80" x2="200" y2="200" stroke="#dc2626" stroke-width="2" stroke-dasharray="4"/>
+        <text x="90" y="95" font-size="12" fill="#9f1239" font-weight="bold">B(2,19)</text>
+        <text x="305" y="145" font-size="12" fill="#9f1239" font-weight="bold">D(10,7)</text>
+        <text x="190" y="75" font-size="12" fill="#9f1239" font-weight="bold">A</text>
+        <text x="190" y="215" font-size="12" fill="#9f1239" font-weight="bold">C</text>
+        <text x="200" y="265" text-anchor="middle" font-size="11" fill="#9f1239">AC ⊥ BD at midpoint (6,13)</text>
+    </svg>`,
+    
+    circle_theorem: `<svg class="svg-graph" width="400" height="280" viewBox="0 0 400 280" xmlns="http://www.w3.org/2000/svg">
+        <rect x="5" y="5" width="390" height="270" rx="12" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+        <text x="200" y="25" text-anchor="middle" font-size="14" fill="#92400e" font-weight="bold">⭕ Circle Theorems</text>
+        <circle cx="200" cy="140" r="80" fill="none" stroke="#f59e0b" stroke-width="3"/>
+        <circle cx="200" cy="140" r="3" fill="#dc2626"/>
+        <text x="205" y="135" font-size="10" fill="#dc2626">O</text>
+        <circle cx="130" cy="180" r="4" fill="#2563eb"/>
+        <text x="115" y="200" font-size="11" fill="#2563eb" font-weight="bold">A</text>
+        <circle cx="270" cy="180" r="4" fill="#2563eb"/>
+        <text x="275" y="200" font-size="11" fill="#2563eb" font-weight="bold">B</text>
+        <circle cx="200" cy="60" r="4" fill="#2563eb"/>
+        <text x="205" y="55" font-size="11" fill="#2563eb" font-weight="bold">D</text>
+        <circle cx="280" cy="220" r="4" fill="#2563eb"/>
+        <text x="290" y="235" font-size="11" fill="#2563eb" font-weight="bold">C</text>
+        <line x1="130" y1="180" x2="270" y2="180" stroke="#2563eb" stroke-width="2"/>
+        <line x1="130" y1="180" x2="200" y2="60" stroke="#2563eb" stroke-width="2"/>
+        <line x1="270" y1="180" x2="200" y2="60" stroke="#2563eb" stroke-width="2"/>
+        <line x1="270" y1="180" x2="280" y2="220" stroke="#2563eb" stroke-width="2"/>
+        <line x1="130" y1="180" x2="280" y2="220" stroke="#2563eb" stroke-width="2"/>
+        <text x="200" y="265" text-anchor="middle" font-size="11" fill="#92400e">∠BAD + ∠BCD = 180°</text>
+    </svg>`
+};
+
+// ==================== EXAM DATA - 24 QUESTIONS ====================
+const originalExamData = {
+    modules: [
+        {
+            id: 'module1',
+            title: { ar: '📘 Module 1: الكسور والجبر (Q1-Q6)', en: '📘 Module 1: Fractions & Algebra (Q1-Q6)' },
+            questions: [
+                {
+                    q: { ar: 'أثبت أن: <span class="math-display">4⅔ ÷ 1⅑ = 4⅕</span>', en: 'Prove: <span class="math-display">4⅔  1⅑ = 4⅕</span>' },
+                    options: [
+                        { ar: '14/3 × 9/10 = 126/30 = 21/5 = 4⅕', en: '14/3 × 9/10 = 126/30 = 21/5 = 4⅕' },
+                        { ar: '14/3 × 10/9 = 140/27', en: '14/3 × 10/9 = 140/27' },
+                        { ar: '14/3 ÷ 10/9 = 126/30', en: '14/3 ÷ 10/9 = 126/30' },
+                        { ar: '3/14 × 9/10 = 27/140', en: '3/14 × 9/10 = 27/140' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'نحول: 4⅔ = 14/3، 1⅑ = 10/9. نقلب ونضرب: 14/3 × 9/10 = 126/30 = 21/5 = 4 ✓', en: 'Convert: 4⅔ = 14/3, 1⅑ = 10/9. Flip and multiply: 14/3 × 9/10 = 126/30 = 21/5 = 4⅕ ✓' }
+                },
+                {
+                    q: { ar: 'بسّط: <span class="math-display">e⁹ ÷ e⁵</span>', en: 'Simplify: <span class="math-display">e⁹ ÷ e⁵</span>' },
+                    options: [
+                        { ar: '<span class="math-display">e⁴</span>', en: '<span class="math-display">e⁴</span>' },
+                        { ar: '<span class="math-display">e¹⁴</span>', en: '<span class="math-display">e¹⁴</span>' },
+                        { ar: '<span class="math-display">e⁴⁵</span>', en: '<span class="math-display">e⁴⁵</span>' },
+                        { ar: '<span class="math-display">2e⁴</span>', en: '<span class="math-display">2e⁴</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'e⁹ ÷ e⁵ = e^(9-5) = e⁴', en: 'e⁹  e⁵ = e^(9-5) = e⁴' }
+                },
+                {
+                    q: { ar: 'وسّع: <span class="math-display">(x + 9)(x - 2)</span>', en: 'Expand: <span class="math-display">(x + 9)(x - 2)</span>' },
+                    options: [
+                        { ar: '<span class="math-display">x² + 7x - 18</span>', en: '<span class="math-display">x² + 7x - 18</span>' },
+                        { ar: '<span class="math-display">x² - 7x - 18</span>', en: '<span class="math-display">x² - 7x - 18</span>' },
+                        { ar: '<span class="math-display">x² + 11x - 18</span>', en: '<span class="math-display">x² + 11x - 18</span>' },
+                        { ar: '<span class="math-display">x² + 7x + 18</span>', en: '<span class="math-display">x² + 7x + 18</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'x² - 2x + 9x - 18 = x² + 7x - 18', en: 'x² - 2x + 9x - 18 = x² + 7x - 18' }
+                },
+                {
+                    q: { ar: 'حلّل: <span class="math-display">16c⁴p² + 20cp³</span>', en: 'Factorise: <span class="math-display">16c⁴p² + 20cp³</span>' },
+                    options: [
+                        { ar: '<span class="math-display">4cp²(4c³ + 5p)</span>', en: '<span class="math-display">4cp²(4c³ + 5p)</span>' },
+                        { ar: '<span class="math-display">4c(4c³p² + 5p³)</span>', en: '<span class="math-display">4c(4c³p² + 5p³)</span>' },
+                        { ar: '<span class="math-display">2cp²(8c³ + 10p)</span>', en: '<span class="math-display">2cp²(8c³ + 10p)</span>' },
+                        { ar: '<span class="math-display">4cp(4c³p + 5p²)</span>', en: '<span class="math-display">4cp(4c³p + 5p²)</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'العامل المشترك الأكبر = 4cp². الناتج: 4cp²(4c³ + 5p)', en: 'GCF = 4cp². Result: 4cp²(4c³ + 5p)' }
+                },
+                {
+                    q: { ar: 'أوجد قيمة y عندما x = 4 في الدالة <span class="math-display">y = x² - 3x - 1</span>', en: 'Find y when x = 4 in <span class="math-display">y = x² - 3x - 1</span>' },
+                    svg: svgGraphs.parabola,
+                    options: [
+                        { ar: '<span class="math-display">3</span>', en: '<span class="math-display">3</span>' },
+                        { ar: '<span class="math-display">-3</span>', en: '<span class="math-display">-3</span>' },
+                        { ar: '<span class="math-display">7</span>', en: '<span class="math-display">7</span>' },
+                        { ar: '<span class="math-display">-1</span>', en: '<span class="math-display">-1</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'y = 16 - 12 - 1 = 3', en: 'y = 16 - 12 - 1 = 3' }
+                },
+                {
+                    q: { ar: 'في تجربة رمي حجر نرد متحيز، P(2) = 2x، P(4) = 3x، P(6) = x. إذا كان مجموع الاحتمالات = 1 و P(1)=2x, P(3)=0.18, P(5)=0.26، فما قيمة x؟', en: 'In a biased dice experiment, P(2)=2x, P(4)=3x, P(6)=x. If total probability = 1 and P(1)=2x, P(3)=0.18, P(5)=0.26, find x.' },
+                    options: [
+                        { ar: '<span class="math-display">0.07</span>', en: '<span class="math-display">0.07</span>' },
+                        { ar: '<span class="math-display">0.1</span>', en: '<span class="math-display">0.1</span>' },
+                        { ar: '<span class="math-display">0.56</span>', en: '<span class="math-display">0.56</span>' },
+                        { ar: '<span class="math-display">0.14</span>', en: '<span class="math-display">0.14</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: '8x + 0.44 = 1 → 8x = 0.56 → x = 0.07', en: '8x + 0.44 = 1 → 8x = 0.56 → x = 0.07' }
+                }
+            ]
+        },
+        {
+            id: 'module2',
+            title: { ar: '📙 Module 2: الهندسة والقياس (Q7-Q12)', en: '📙 Module 2: Geometry & Measurement (Q7-Q12)' },
+            questions: [
+                {
+                    q: { ar: 'مكعب خشبي أبعاده 12×8×5 سم، وكثافته 0.7 g/cm³. ما كتلته؟', en: 'Wooden cuboid 12×8×5 cm, density 0.7 g/cm³. What is its mass?' },
+                    options: [
+                        { ar: '<span class="math-display">336 g</span>', en: '<span class="math-display">336 g</span>' },
+                        { ar: '<span class="math-display">480 g</span>', en: '<span class="math-display">480 g</span>' },
+                        { ar: '<span class="math-display">240 g</span>', en: '<span class="math-display">240 g</span>' },
+                        { ar: '<span class="math-display">686 g</span>', en: '<span class="math-display">686 g</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'V = 12×8×5 = 480 cm³. m = 480 × 0.7 = 336 g', en: 'V = 12×8×5 = 480 cm³. m = 480 × 0.7 = 336 g' }
+                },
+                {
+                    q: { ar: 'اكتب <span class="math-display">0.004</span> بالصيغة القياسية:', en: 'Write <span class="math-display">0.004</span> in standard form:' },
+                    options: [
+                        { ar: '<span class="math-display">4 × 10⁻³</span>', en: '<span class="math-display">4 × 10⁻³</span>' },
+                        { ar: '<span class="math-display">4 × 10³</span>', en: '<span class="math-display">4 × 10³</span>' },
+                        { ar: '<span class="math-display">0.4 × 10⁻²</span>', en: '<span class="math-display">0.4 × 10⁻²</span>' },
+                        { ar: '<span class="math-display">4 × 10⁻²</span>', en: '<span class="math-display">4 × 10⁻²</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: '0.004 = 4 × 10⁻³', en: '0.004 = 4 × 10⁻³' }
+                },
+                {
+                    q: { ar: 'احسب: <span class="math-display">(2×10⁶ × 3×10⁴) ÷ (4×10⁵)</span>', en: 'Calculate: <span class="math-display">(2×10⁶ × 3×10⁴) ÷ (4×10⁵)</span>' },
+                    options: [
+                        { ar: '<span class="math-display">1.5 × 10</span>', en: '<span class="math-display">1.5 × 10⁵</span>' },
+                        { ar: '<span class="math-display">1.5 × 10⁶</span>', en: '<span class="math-display">1.5 × 10⁶</span>' },
+                        { ar: '<span class="math-display">6 × 10⁵</span>', en: '<span class="math-display">6 × 10⁵</span>' },
+                        { ar: '<span class="math-display">15 × 10⁴</span>', en: '<span class="math-display">15 × 10⁴</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: '6×10¹⁰ ÷ 4×10⁵ = 1.5×10⁵ = 150,000', en: '6×10¹⁰ ÷ 4×10⁵ = 1.5×10⁵ = 150,000' }
+                },
+                {
+                    q: { ar: 'قارب قيمته $170,000 في 2016، يقل 8% سنوياً. ما قيمته في 2019؟', en: 'Boat worth $170,000 in 2016, depreciates 8% yearly. Value in 2019?' },
+                    options: [
+                        { ar: '<span class="math-display">$132,377</span>', en: '<span class="math-display">$132,377</span>' },
+                        { ar: '<span class="math-display">$129,200</span>', en: '<span class="math-display">$129,200</span>' },
+                        { ar: '<span class="math-display">$140,000</span>', en: '<span class="math-display">$140,000</span>' },
+                        { ar: '<span class="math-display">$125,000</span>', en: '<span class="math-display">$125,000</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'V = 170000 × (0.92)³ ≈ $132,377', en: 'V = 170000 × (0.92)³ ≈ $132,377' }
+                },
+                {
+                    q: { ar: 'شكل مركب: مثلث قائم متساوي الساقين (6cm) + نصف دائرة على الوتر. ما المساحة؟', en: 'Compound shape: right isosceles triangle (6cm) + semicircle on hypotenuse. Area?' },
+                    svg: svgGraphs.triangle_circle,
+                    options: [
+                        { ar: '<span class="math-display">18 + 9π ≈ 46.3 cm²</span>', en: '<span class="math-display">18 + 9π ≈ 46.3 cm²</span>' },
+                        { ar: '<span class="math-display">36 + 9π cm²</span>', en: '<span class="math-display">36 + 9π cm²</span>' },
+                        { ar: '<span class="math-display">18 + 18π cm²</span>', en: '<span class="math-display">18 + 18π cm²</span>' },
+                        { ar: '<span class="math-display">36 + 18π cm²</span>', en: '<span class="math-display">36 + 18π cm²</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'المثلث = ½×6×6 = 18. الوتر = √72، نصف القطر = √72/2. نصف الدائرة = ½π(√72/2)² = 9π. المجموع = 18 + 9π', en: 'Triangle = ½×6×6 = 18. Hypotenuse = √72, radius = 72/2. Semicircle = ½π(√72/2)² = 9π. Total = 18 + 9π' }
+                },
+                {
+                    q: { ar: 'إذا كان A = 2 × 3 × 5ᵐ، فاكتب 8A كحاصل ضرب عوامل أولية:', en: 'If A = 2 × 3 × 5ᵐ, write 8A as product of prime factors:' },
+                    options: [
+                        { ar: '<span class="math-display">2ⁿ⁺³ × 3 × 5ᵐ</span>', en: '<span class="math-display">2ⁿ³ × 3 × 5ᵐ</span>' },
+                        { ar: '<span class="math-display">2ⁿ × 3 × 5ᵐ⁺³</span>', en: '<span class="math-display">2 × 3 × 5ᵐ⁺³</span>' },
+                        { ar: '<span class="math-display">8 × 2ⁿ × 3 × 5ᵐ</span>', en: '<span class="math-display">8 × 2ⁿ × 3 × 5</span>' },
+                        { ar: '<span class="math-display">2³ⁿ × 3 × 5ᵐ</span>', en: '<span class="math-display">2³ⁿ × 3 × 5ᵐ</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: '8A = 2³ × 2ⁿ × 3 × 5 = 2ⁿ⁺³ × 3 × 5ᵐ', en: '8A = 2³ × 2ⁿ × 3 × 5ᵐ = 2ⁿ⁺³ × 3 × 5' }
+                }
+            ]
+        },
+        {
+            id: 'module3',
+            title: { ar: ' Module 3: الاحتمالات والمتتابعات (Q13-Q18)', en: '📗 Module 3: Probability & Sequences (Q13-Q18)' },
+            questions: [
+                {
+                    q: { ar: 'المجموعة A = {1,2,...,11}، B = {-9,-8,...,6}. ما A  B؟', en: 'Set A = {1,2,...,11}, B = {-9,-8,...,6}. What is A ∩ B?' },
+                    options: [
+                        { ar: '<span class="math-display">{1, 2, 3, 4, 5, 6}</span>', en: '<span class="math-display">{1, 2, 3, 4, 5, 6}</span>' },
+                        { ar: '<span class="math-display">{1, 2, 3, 4, 5, 6, 7}</span>', en: '<span class="math-display">{1, 2, 3, 4, 5, 6, 7}</span>' },
+                        { ar: '<span class="math-display">{-9, -8, ..., 11}</span>', en: '<span class="math-display">{-9, -8, ..., 11}</span>' },
+                        { ar: '<span class="math-display">{7, 8, 9, 10, 11}</span>', en: '<span class="math-display">{7, 8, 9, 10, 11}</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'التقاطع = العناصر المشتركة = {1, 2, 3, 4, 5, 6}', en: 'Intersection = common elements = {1, 2, 3, 4, 5, 6}' }
+                },
+                {
+                    q: { ar: 'حوّل <span class="math-display">0.2545454...</span> إلى كسر اعتيادي:', en: 'Convert <span class="math-display">0.2545454...</span> to a fraction:' },
+                    options: [
+                        { ar: '<span class="math-display">14/55</span>', en: '<span class="math-display">14/55</span>' },
+                        { ar: '<span class="math-display">254/999</span>', en: '<span class="math-display">254/999</span>' },
+                        { ar: '<span class="math-display">25/99</span>', en: '<span class="math-display">25/99</span>' },
+                        { ar: '<span class="math-display">14/50</span>', en: '<span class="math-display">14/50</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'x = 0.25454..., 1000x = 254.54..., 10x = 2.54... → 990x = 252 → x = 252/990 = 14/55', en: 'x = 0.25454..., 1000x = 254.54..., 10x = 2.54... → 990x = 252 → x = 252/990 = 14/55' }
+                },
+                {
+                    q: { ar: 'متتابعة حسابية: الحد الأول = 7، الفرق = 3. ما مجموع أول 100 حد؟', en: 'Arithmetic sequence: first term = 7, common difference = 3. Sum of first 100 terms?' },
+                    options: [
+                        { ar: '<span class="math-display">15,550</span>', en: '<span class="math-display">15,550</span>' },
+                        { ar: '<span class="math-display">15,050</span>', en: '<span class="math-display">15,050</span>' },
+                        { ar: '<span class="math-display">31,100</span>', en: '<span class="math-display">31,100</span>' },
+                        { ar: '<span class="math-display">15,500</span>', en: '<span class="math-display">15,500</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'S₁₀₀ = 100/2 × [2(7) + 99(3)] = 50 × [14 + 297] = 50 × 311 = 15,550', en: 'S₁₀₀ = 100/2 × [2(7) + 99(3)] = 50 × 311 = 15,550' }
+                },
+                {
+                    q: { ar: 'شكلان متشابهان، نسبة الأطوال 2:3. إذا كانت مساحة الشكل الأصغر 960 cm²، فما مساحة الأكبر؟', en: 'Two similar shapes, length ratio 2:3. Smaller area = 960 cm². Larger area?' },
+                    options: [
+                        { ar: '<span class="math-display">2,160 cm²</span>', en: '<span class="math-display">2,160 cm²</span>' },
+                        { ar: '<span class="math-display">1,440 cm²</span>', en: '<span class="math-display">1,440 cm²</span>' },
+                        { ar: '<span class="math-display">2,880 cm²</span>', en: '<span class="math-display">2,880 cm²</span>' },
+                        { ar: '<span class="math-display">1,920 cm²</span>', en: '<span class="math-display">1,920 cm²</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'نسبة المساحات = (3/2)² = 9/4. المساحة = 960 × 9/4 = 2,160 cm²', en: 'Area ratio = (3/2)² = 9/4. Area = 960 × 9/4 = 2,160 cm²' }
+                },
+                {
+                    q: { ar: 'في مثلث PQR: PQ = 26.3 cm، PR = 17.8 cm، ∠QPR = 36°. احسب QR باستخدام قانون جيب التمام:', en: 'In triangle PQR: PQ = 26.3 cm, PR = 17.8 cm, QPR = 36°. Find QR using Cosine Rule:' },
+                    options: [
+                        { ar: '<span class="math-display">≈ 15.8 cm</span>', en: '<span class="math-display">≈ 15.8 cm</span>' },
+                        { ar: '<span class="math-display">≈ 16.5 cm</span>', en: '<span class="math-display">≈ 16.5 cm</span>' },
+                        { ar: '<span class="math-display">≈ 14.2 cm</span>', en: '<span class="math-display">≈ 14.2 cm</span>' },
+                        { ar: '<span class="math-display">≈ 18.1 cm</span>', en: '<span class="math-display">≈ 18.1 cm</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'QR² = 26.3² + 17.8² - 2(26.3)(17.8)cos(36°) = 251.07 → QR ≈ 15.8 cm', en: 'QR² = 26.3² + 17.8² - 2(26.3)(17.8)cos(36°) = 251.07 → QR ≈ 15.8 cm' }
+                },
+                {
+                    q: { ar: 'مدرج تكراري: الفئة 35-40 تكرارها 21. ما الكثافة التكرارية؟', en: 'Histogram: class 35-40 has frequency 21. What is the frequency density?' },
+                    options: [
+                        { ar: '<span class="math-display">4.2</span>', en: '<span class="math-display">4.2</span>' },
+                        { ar: '<span class="math-display">3.2</span>', en: '<span class="math-display">3.2</span>' },
+                        { ar: '<span class="math-display">0.75</span>', en: '<span class="math-display">0.75</span>' },
+                        { ar: '<span class="math-display">1.6</span>', en: '<span class="math-display">1.6</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'الكثافة = التكرار ÷ عرض الفئة = 21 ÷ 5 = 4.2', en: 'Density = frequency ÷ class width = 21 ÷ 5 = 4.2' }
+                }
+            ]
+        },
+        {
+            id: 'module4',
+            title: { ar: '📕 Module 4: التفاضل والهندسة الإحداثية (Q19-Q24)', en: '📕 Module 4: Calculus & Coordinate Geometry (Q19-Q24)' },
+            questions: [
+                {
+                    q: { ar: 'في دائرة، ∠ADT = 71° (زاوية مماس ووتر). المثلث ABD متساوي الساقين (AB=AD). الشكل ABCD دائري. ما BCD؟', en: 'In a circle, ∠ADT = 71° (tangent-chord). Triangle ABD isosceles (AB=AD). ABCD is cyclic. Find ∠BCD:' },
+                    svg: svgGraphs.circle_theorem,
+                    options: [
+                        { ar: '<span class="math-display">142°</span>', en: '<span class="math-display">142°</span>' },
+                        { ar: '<span class="math-display">109°</span>', en: '<span class="math-display">109°</span>' },
+                        { ar: '<span class="math-display">71°</span>', en: '<span class="math-display">71°</span>' },
+                        { ar: '<span class="math-display">38°</span>', en: '<span class="math-display">38°</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: '∠ABD = 71° (مماس-وتر). ∠ADB = 71° (متساوي الساقين). ∠BAD = 38°. ∠BCD = 180° - 38° = 142° (دائري)', en: 'ABD = 71° (tangent-chord). ∠ADB = 71° (isosceles). ∠BAD = 38°. BCD = 180° - 38° = 142° (cyclic)' }
+                },
+                {
+                    q: { ar: 'شكل مركب: نصف كرة + أسطوانة (ارتفاعها 3r). الحجم الكلي = 792π. ما الارتفاع الكلي؟', en: 'Compound shape: hemisphere + cylinder (height 3r). Total volume = 792π. Total height?' },
+                    svg: svgGraphs.cylinder_hemisphere,
+                    options: [
+                        { ar: '<span class="math-display">24 cm</span>', en: '<span class="math-display">24 cm</span>' },
+                        { ar: '<span class="math-display">18 cm</span>', en: '<span class="math-display">18 cm</span>' },
+                        { ar: '<span class="math-display">30 cm</span>', en: '<span class="math-display">30 cm</span>' },
+                        { ar: '<span class="math-display">12 cm</span>', en: '<span class="math-display">12 cm</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'V = (2/3)πr³ + πr²(3r) = (11/3)πr³ = 792π → r³ = 216 → r = 6. الارتفاع = r + 3r = 4r = 24', en: 'V = (2/3)πr³ + πr²(3r) = (11/3)πr³ = 792π → r³ = 216 → r = 6. Height = r + 3r = 4r = 24' }
+                },
+                {
+                    q: { ar: 'في الطائرة الورزية ABCD: B(2,19)، D(10,7). AC ينصف BD عمودياً. ما معادلة AC؟', en: 'In kite ABCD: B(2,19), D(10,7). AC perpendicularly bisects BD. Equation of AC?' },
+                    svg: svgGraphs.kite_geometry,
+                    options: [
+                        { ar: '<span class="math-display">2x + 3y = 51</span>', en: '<span class="math-display">2x + 3y = 51</span>' },
+                        { ar: '<span class="math-display">3x + 2y = 44</span>', en: '<span class="math-display">3x + 2y = 44</span>' },
+                        { ar: '<span class="math-display">2x - 3y = 51</span>', en: '<span class="math-display">2x - 3y = 51</span>' },
+                        { ar: '<span class="math-display">3x - 2y = 44</span>', en: '<span class="math-display">3x - 2y = 44</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'منتصف BD = (6,13). ميل BD = 3/2. ميل AC = -2/3. المعادلة: y-13 = -2/3(x-6) → 2x+3y = 51', en: 'Midpoint BD = (6,13). Slope BD = 3/2. Slope AC = -2/3. Equation: y-13 = -2/3(x-6) → 2x+3y = 51' }
+                },
+                {
+                    q: { ar: 'الإزاحة s = t³ - 6t² + 5t - 4. متى يكون التسارع = 3 m/s²؟', en: 'Displacement s = t³ - 6t² + 5t - 4. When is acceleration = 3 m/s²?' },
+                    options: [
+                        { ar: '<span class="math-display">t = 2.5 s</span>', en: '<span class="math-display">t = 2.5 s</span>' },
+                        { ar: '<span class="math-display">t = 3 s</span>', en: '<span class="math-display">t = 3 s</span>' },
+                        { ar: '<span class="math-display">t = 2 s</span>', en: '<span class="math-display">t = 2 s</span>' },
+                        { ar: '<span class="math-display">t = 1.5 s</span>', en: '<span class="math-display">t = 1.5 s</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'v = ds/dt = 3t² - 12t + 5. a = dv/dt = 6t - 12. 6t - 12 = 3 → t = 2.5 s', en: 'v = ds/dt = 3t² - 12t + 5. a = dv/dt = 6t - 12. 6t - 12 = 3 → t = 2.5 s' }
+                },
+                {
+                    q: { ar: 'حل المعادلة: <span class="math-display">4m/3 + 7 - 2m = 9</span>', en: 'Solve: <span class="math-display">4m/3 + 7 - 2m = 9</span>' },
+                    options: [
+                        { ar: '<span class="math-display">m = -3</span>', en: '<span class="math-display">m = -3</span>' },
+                        { ar: '<span class="math-display">m = 3</span>', en: '<span class="math-display">m = 3</span>' },
+                        { ar: '<span class="math-display">m = -6</span>', en: '<span class="math-display">m = -6</span>' },
+                        { ar: '<span class="math-display">m = 6</span>', en: '<span class="math-display">m = 6</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'نضرب في 3: 4m + 21 - 6m = 27 → -2m = 6 → m = -3', en: 'Multiply by 3: 4m + 21 - 6m = 27 → -2m = 6 → m = -3' }
+                },
+                {
+                    q: { ar: 'بإكمال المربع: <span class="math-display">x² - 6x + 10 = (x-3)² + 1</span>. ما التحويل من y = x² إلى y = x² - 6x + 10؟', en: 'Completing square: <span class="math-display">x² - 6x + 10 = (x-3)² + 1</span>. Transformation from y = x² to y = x² - 6x + 10?' },
+                    options: [
+                        { ar: 'إزاحة بمتجه (3, 1)', en: 'Translation by vector (3, 1)' },
+                        { ar: 'إزاحة بمتجه (-3, 1)', en: 'Translation by vector (-3, 1)' },
+                        { ar: 'إزاحة بمتجه (3, -1)', en: 'Translation by vector (3, -1)' },
+                        { ar: 'تمدد بعامل 3', en: 'Stretch by factor 3' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'y = (x-3)² + 1: إزاحة 3 لليمين و 1 للأعلى → متجه (3, 1)', en: 'y = (x-3)² + 1: shift 3 right and 1 up → vector (3, 1)' }
+                }
+            ]
+        }
+    ]
+};
+
+function shuffleArray(array) {
+    const arr = [...array];
+    for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(rng() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+}
+
+let examData;
+let correctAnswersMap = {};
+let currentLang = 'ar';
+let timeRemaining = TOTAL_TIME;
+let timerInterval;
+
+function prepareShuffledExam() {
+    rng = mulberry32(currentSeed);
+    examData = JSON.parse(JSON.stringify(originalExamData));
+    correctAnswersMap = {};
+    let globalIdx = 0;
+    examData.modules.forEach((module) => {
+        module.questions = shuffleArray(module.questions);
+        module.questions.forEach((q) => {
+            const optionsWithCorrect = q.options.map((opt, idx) => ({ option: opt, isCorrect: idx === q.correct }));
+            const shuffledOptions = shuffleArray(optionsWithCorrect);
+            q.options = shuffledOptions.map(o => o.option);
+            q.correct = shuffledOptions.findIndex(o => o.isCorrect);
+            correctAnswersMap[globalIdx] = String.fromCharCode(97 + q.correct);
+            globalIdx++;
+        });
+    });
+}
+
+function reshuffleExam() {
+    const msg = currentLang === 'ar' ? '🔄 أسئلة جديدة ومسح الإجابات. متأكد؟' : '🔄 New questions and clear answers. Sure?';
+    if (confirm(msg)) {
+        currentSeed = Date.now(); timeRemaining = TOTAL_TIME; answersVisible = false;
+        prepareShuffledExam(); renderExam(); saveState();
+        alert(currentLang === 'ar' ? '🎲 تم تغيير الأسئلة! حظاً موفقاً! 🍀' : '🎲 Questions changed! Good luck! 🍀');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+}
+
+function setLanguage(lang) {
+    currentLang = lang;
+    document.documentElement.lang = lang;
+    document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+    document.getElementById('btn-ar').classList.toggle('active', lang === 'ar');
+    document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+    document.body.classList.toggle('en-mode', lang === 'en');
+    document.querySelectorAll('[data-ar][data-en]').forEach(el => {
+        el.innerHTML = lang === 'ar' ? el.getAttribute('data-ar') : el.getAttribute('data-en');
+    });
+    renderExam(); saveState(false);
+}
+
+function renderExam() {
+    const container = document.getElementById('exam-content');
+    const labels = { ar: { option: ['A', 'B', 'C', 'D'], answer: '✅ الإجابة:' }, en: { option: ['A', 'B', 'C', 'D'], answer: '✅ Answer:' } };
+    const lbl = labels[currentLang];
+    const isRTL = currentLang === 'ar';
+    let html = '';
+    let globalIdx = 0;
+
+    examData.modules.forEach((module, modIdx) => {
+        const badgeClass = ['module-1', 'module-2', 'module-3', 'module-4'][modIdx];
+        html += `<section class="bg-white p-6 rounded-2xl shadow-lg border-2 border-blue-100 mb-8">
+            <div class="text-center mb-4"><span class="module-badge ${badgeClass}">${module.title[currentLang]}</span></div>
+            <ol class="space-y-4 text-sm">`;
+        module.questions.forEach((q) => {
+            const bs = isRTL ? 'border-r-4 pr-4' : 'border-l-4 pl-4';
+            html += `<li class="${bs} border-blue-400 py-2" id="q-${globalIdx}">
+                <strong class="text-blue-700">${globalIdx + 1}.</strong> <span class="arabic-math">${q.q[currentLang]}</span><br>`;
+            if (q.svg) html += `<div class="graph-container">${q.svg}</div>`;
+            q.options.forEach((opt, oIdx) => {
+                const rs = isRTL ? 'mr-4 ml-2' : 'ml-4 mr-2';
+                html += `<label class="cursor-pointer block mt-1 ${isRTL ? 'mr-4' : 'ml-4'} hover:bg-blue-50 rounded-lg p-1 transition">
+                    <input type="radio" name="q${globalIdx}" value="${String.fromCharCode(97 + oIdx)}" class="${rs}">
+                    <span class="arabic-math">${lbl.option[oIdx]}) ${opt[currentLang]}</span></label>`;
+            });
+            html += `<div class="answer-box text-green-700 mt-2 font-medium ${answersVisible ? '' : 'hidden'} bg-green-50 rounded-lg p-2">
+                ${lbl.answer} <span class="arabic-math">${lbl.option[q.correct]}) ${q.options[q.correct][currentLang]}</span> — <span class="arabic-math">${q.answer[currentLang]}</span></div></li>`;
+            globalIdx++;
+        });
+        html += `</ol></section>`;
+    });
+    container.innerHTML = html;
+}
+
+function startTimer() {
+    updateTimerDisplay();
+    timerInterval = setInterval(() => {
+        timeRemaining--; updateTimerDisplay();
+        if (timeRemaining % 60 === 0) saveState(false);
+        if (timeRemaining <= 600) document.getElementById('timer').classList.add('timer-warning');
+        if (timeRemaining <= 0) {
+            clearInterval(timerInterval);
+            alert(currentLang === 'ar' ? "⏰ انتهى الوقت!" : "⏰ Time's up!");
+            gradeExam();
+        }
+    }, 1000);
+}
+
+function updateTimerDisplay() {
+    const m = Math.floor(timeRemaining / 60); const s = timeRemaining % 60;
+    document.getElementById('timer').textContent = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+}
+
+function toggleAnswers() {
+    answersVisible = !answersVisible;
+    document.querySelectorAll('.answer-box').forEach(el => el.classList.toggle('hidden', !answersVisible));
+    saveState(false);
+}
+
+function gradeExam() {
+    let correctCount = 0;
+    const moduleScores = [0, 0, 0, 0];
+    let globalIdx = 0;
+    examData.modules.forEach((module, modIdx) => {
+        module.questions.forEach(() => {
+            const sel = document.querySelector(`input[name="q${globalIdx}"]:checked`);
+            const li = document.getElementById(`q-${globalIdx}`);
+            if (li) {
+                const isCorrect = sel && sel.value === correctAnswersMap[globalIdx];
+                if (isCorrect) {
+                    correctCount++;
+                    li.classList.add('correct');
+                    li.classList.remove('incorrect');
+                    moduleScores[modIdx]++;
+                } else {
+                    li.classList.add('incorrect');
+                    li.classList.remove('correct');
+                }
+            }
+            globalIdx++;
+        });
+    });
+    const score = Math.round((correctCount / TOTAL_QUESTIONS) * 100);
+    document.getElementById('res-total').textContent = `${score} / 100`;
+    document.getElementById('res-name').textContent = document.getElementById('studentName').value || (currentLang === 'ar' ? 'بطل' : 'Champion');
+    document.getElementById('res-date').textContent = new Date().toLocaleDateString(currentLang === 'ar' ? 'ar-GB' : 'en-GB');
+    const pc = document.getElementById('sections-performance'); pc.innerHTML = '';
+    examData.modules.forEach((m, idx) => {
+        pc.innerHTML += `<div class="flex justify-between items-center p-3 bg-white rounded-lg"><span class="text-gray-700">${m.title[currentLang]}</span><span class="font-bold text-blue-700">${moduleScores[idx]}/${m.questions.length}</span></div>`;
+    });
+    const badge = document.getElementById('success-badge');
+    document.getElementById('success-percent').textContent = `${score}%`;
+    if (currentLang === 'ar') {
+        if (score >= 90) { badge.textContent = '🌟 ممتاز جداً! (Grade 9)'; badge.className = 'success-badge grade-excellent'; }
+        else if (score >= 75) { badge.textContent = '👏 ممتاز! (Grade 7-8)'; badge.className = 'success-badge grade-good'; }
+        else if (score >= 50) { badge.textContent = '👍 جيد (Grade 4-6)'; badge.className = 'success-badge grade-pass'; }
+        else { badge.textContent = '💪 حاول مرة أخرى'; badge.className = 'success-badge grade-fail'; }
+    } else {
+        if (score >= 90) { badge.textContent = '🌟 Outstanding! (Grade 9)'; badge.className = 'success-badge grade-excellent'; }
+        else if (score >= 75) { badge.textContent = '👏 Excellent! (Grade 7-8)'; badge.className = 'success-badge grade-good'; }
+        else if (score >= 50) { badge.textContent = '👍 Good (Grade 4-6)'; badge.className = 'success-badge grade-pass'; }
+        else { badge.textContent = '💪 Try Again'; badge.className = 'success-badge grade-fail'; }
+    }
+    document.getElementById('results-panel').classList.remove('hidden');
+    document.getElementById('results-panel').scrollIntoView({ behavior: 'smooth' });
+    if (timerInterval) clearInterval(timerInterval);
+}
+
+function sendResultsToEmail() {
+    const btn = document.getElementById('sendEmailBtn');
+    const status = document.getElementById('emailStatus');
+    btn.disabled = true;
+    btn.textContent = currentLang === 'ar' ? ' جاري الإرسال...' : '⏳ Sending...';
+    const name = document.getElementById('studentName').value || 'N/A';
+    const studentClass = document.getElementById('studentClass').value || 'N/A';
+    const date = document.getElementById('examDate').value || new Date().toLocaleDateString();
+    const score = document.getElementById('res-total').textContent;
+    const successRate = document.getElementById('success-percent').textContent;
+    const badge = document.getElementById('success-badge').textContent;
+    let questionsHTML = ''; let globalIdx = 0;
+    examData.modules.forEach((module, modIdx) => {
+        questionsHTML += `<tr style="background:linear-gradient(135deg,#1e40af,#dc2626);color:white;"><td colspan="5" style="padding:12px;font-weight:bold;">📌 ${module.title[currentLang]}</td></tr>`;
+        module.questions.forEach((q) => {
+            const sel = document.querySelector(`input[name="q${globalIdx}"]:checked`);
+            const sv = sel ? sel.value : null; const cv = correctAnswersMap[globalIdx]; const ic = sv === cv;
+            let sat = currentLang==='ar'?'❌ لم يجب':'❌ No answer'; let sac = '#dc2626';
+            if (sv) { const si = sv.charCodeAt(0)-97; sat = q.options[si][currentLang]; sac = ic?'#059669':'#dc2626'; }
+            const cat = q.options[q.correct][currentLang];
+            const rb = ic?'#f0fdf4':'#fef2f2'; const bl = ic?'4px solid #10b981':'4px solid #ef4444';
+            questionsHTML += `<tr style="background:${rb};border-right:${bl};"><td style="padding:10px;border:1px solid #e5e7eb;text-align:center;font-weight:bold;">${globalIdx+1}</td><td style="padding:10px;border:1px solid #e5e7eb;"><strong style="color:#1e40af;">${currentLang==='ar'?' السؤال:':'❓ Question:'}</strong><br><span style="font-size:13px;">${q.q[currentLang]}</span></td><td style="padding:10px;border:1px solid #e5e7eb;"><strong style="color:${sac};">${currentLang==='ar'?'✍️ إجابة الطالب:':'✍️ Student:'}</strong><br><span style="color:${sac};font-size:13px;">${sat}</span></td><td style="padding:10px;border:1px solid #e5e7eb;"><strong style="color:#059669;">${currentLang==='ar'?'✅ الصحيحة:':'✅ Correct:'}</strong><br><span style="color:#059669;font-size:13px;">${cat}</span></td><td style="padding:10px;border:1px solid #e5e7eb;text-align:center;">${ic?'<span style="font-size:24px;">✅</span>':'<span style="font-size:24px;">❌</span>'}</td></tr>`;
+            globalIdx++;
+        });
+    });
+    const answersHTML = `<div style="font-family:'Segoe UI',Tahoma,Arial;direction:${currentLang==='ar'?'rtl':'ltr'};"><div style="background:linear-gradient(135deg,#1e40af,#dc2626);color:white;padding:20px;border-radius:10px 10px 0 0;text-align:center;"><h2 style="margin:0;">📊 ${currentLang==='ar'?'نتيجة امتحان IGCSE Mathematics':'IGCSE Mathematics Exam Result'}</h2><p style="margin:5px 0 0;opacity:0.9;">Comprehensive - 24 Questions</p></div><div style="background:#eff6ff;padding:15px;"><table style="width:100%;border-collapse:collapse;"><tr><td style="padding:8px;font-weight:bold;color:#1e40af;">${currentLang==='ar'?'😊 الاسم:':'😊 Name:'}</td><td style="padding:8px;">${name}</td><td style="padding:8px;font-weight:bold;color:#1e40af;">${currentLang==='ar'?'🏫 الشعبة:':'🏫 Class:'}</td><td style="padding:8px;">${studentClass}</td></tr><tr><td style="padding:8px;font-weight:bold;color:#1e40af;">${currentLang==='ar'?'📅 التاريخ:':' Date:'}</td><td style="padding:8px;">${date}</td><td style="padding:8px;font-weight:bold;color:#1e40af;">${currentLang==='ar'?'🏆 التقدير:':'🏆 Grade:'}</td><td style="padding:8px;">${badge}</td></tr></table></div><div style="background:white;padding:20px;text-align:center;"><div style="display:inline-block;margin:0 15px;"><div style="font-size:32px;font-weight:bold;color:#1e40af;">${score}</div><div style="color:#6b7280;font-size:13px;">${currentLang==='ar'?'الدرجة':'Score'}</div></div><div style="display:inline-block;margin:0 15px;"><div style="font-size:32px;font-weight:bold;color:#059669;">${successRate}%</div><div style="color:#6b7280;font-size:13px;">${currentLang==='ar'?'النسبة':'Rate'}</div></div></div><table style="width:100%;border-collapse:collapse;font-size:13px;"><thead><tr style="background:#1e40af;color:white;"><th style="padding:10px;border:1px solid #dc2626;">#</th><th style="padding:10px;border:1px solid #dc2626;">${currentLang==='ar'?'السؤال':'Question'}</th><th style="padding:10px;border:1px solid #dc2626;">${currentLang==='ar'?'إجابة الطالب':'Student'}</th><th style="padding:10px;border:1px solid #dc2626;">${currentLang==='ar'?'الصحيحة':'Correct'}</th><th style="padding:10px;border:1px solid #dc2626;">${currentLang==='ar'?'النتيجة':'Result'}</th></tr></thead><tbody>${questionsHTML}</tbody></table><div style="background:linear-gradient(135deg,#eff6ff,#fee2e2);padding:15px;border-radius:0 0 10px 10px;"><p style="margin:0;color:#1e40af;text-align:center;">📊 <strong>${currentLang==='ar'?'أحسنت يا بطل! استمر في التميز!':'Great job! Keep excelling!'}</strong> 📊</p><p style="margin:5px 0 0;color:#1e40af;text-align:center;font-size:12px;">${currentLang==='ar'?'تم الإرسال تلقائياً | Mr. Mohammed Hesham':'Auto-sent | Mr. Mohammed Hesham'}</p></div></div>`;
+    emailjs.send(SERVICE_ID, TEMPLATE_ID, { to_email: TARGET_EMAIL, student_name: name, student_class: studentClass, exam_date: date, total_score: score, success_rate: successRate, grade: badge, answers_table: answersHTML }).then(() => {
+        status.textContent = currentLang==='ar'?'✅ تم الإرسال بنجاح!':'✅ Sent successfully!'; status.style.color = '#059669'; btn.textContent = currentLang==='ar'?'✓ تم':'✓ Sent';
+    }).catch(err => {
+        status.textContent = currentLang==='ar'?'❌ حدث خطأ':'❌ Error'; status.style.color = '#dc2626'; btn.disabled = false; btn.textContent = currentLang==='ar'?'📧 حاول مرة أخرى':'📧 Try Again'; console.error(err);
+    });
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+    const saved = loadState();
+    if (saved && saved.seed) {
+        currentSeed = saved.seed; currentLang = saved.lang || 'ar';
+        timeRemaining = saved.timeRemaining !== undefined ? saved.timeRemaining : TOTAL_TIME;
+        answersVisible = saved.answersVisible || false;
+        document.documentElement.lang = currentLang;
+        document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+        document.getElementById('btn-ar').classList.toggle('active', currentLang === 'ar');
+        document.getElementById('btn-en').classList.toggle('active', currentLang === 'en');
+        document.body.classList.toggle('en-mode', currentLang === 'en');
+        document.querySelectorAll('[data-ar][data-en]').forEach(el => { el.innerHTML = currentLang === 'ar' ? el.getAttribute('data-ar') : el.getAttribute('data-en'); });
+    } else { currentSeed = Date.now(); }
+    prepareShuffledExam(); renderExam();
+    if (saved) {
+        if (saved.studentName) document.getElementById('studentName').value = saved.studentName;
+        if (saved.studentClass) document.getElementById('studentClass').value = saved.studentClass;
+        if (saved.examDate) document.getElementById('examDate').value = saved.examDate;
+        if (saved.answers) restoreAnswers(saved.answers);
+    }
+    setupAnswerListeners(); setupInputListeners(); startTimer();
+});
+window.addEventListener('beforeunload', () => saveState(false));
+</script>
+</body>
+</html>
